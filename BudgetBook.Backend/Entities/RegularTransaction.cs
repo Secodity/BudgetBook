@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,7 +37,7 @@ public class RegularTransaction : Transaction
                 nextDuty = __GetNextWeeklyDuty(dateFrom, factor);
                 break;
             case eFrequency.EverySecondWeek:
-                nextDuty = dateFrom.AddDays(14);
+                nextDuty = __GetNextWeeklyDuty(dateFrom, factor, 14);
                 break;
             case eFrequency.Monthly:
                 nextDuty = dateFrom.AddMonths(1);
@@ -53,13 +54,14 @@ public class RegularTransaction : Transaction
         }
         return nextDuty;
     }
-
     private DateOnly __GetNextWeeklyDuty(DateOnly dateFrom, int factor)
+        => __GetNextWeeklyDuty(dateFrom, factor, 7);
+    private DateOnly __GetNextWeeklyDuty(DateOnly dateFrom, int factor, int alternativeWeekSize)
     {
         var dayDiff = dateFrom.DayNumber - InitDate.DayNumber;
 
-        var rest = dayDiff % 7;
-        var weeks = dayDiff / 7;
+        var rest = dayDiff % alternativeWeekSize;
+        var weeks = dayDiff / alternativeWeekSize;
         var weekRest = weeks % factor;
 
         if (rest == 0)
@@ -71,10 +73,18 @@ public class RegularTransaction : Transaction
         }
         else
         {
-            var nextDuty = dateFrom.AddDays(7 - rest);
-            weeks = (nextDuty.DayNumber - InitDate.DayNumber) / 7;
-            weekRest = weeks % factor;
-            return nextDuty.AddDays(7 * (factor - weekRest));
+            var nextDuty = dateFrom.AddDays(alternativeWeekSize - rest);
+            
+            if(factor > 1)
+            {
+                weeks = (nextDuty.DayNumber - InitDate.DayNumber) / alternativeWeekSize;
+                weekRest = weeks % factor;
+            }
+
+            if (weekRest == 0) //If InitDate is in First Period
+                return nextDuty;
+
+            return nextDuty.AddDays(alternativeWeekSize * (factor - weekRest));
         }
     }
 }

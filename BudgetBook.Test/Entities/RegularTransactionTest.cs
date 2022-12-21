@@ -28,6 +28,19 @@ namespace BudgetBook.Test.Entities
         }
 
         [TestMethod]
+        public void TestOfRegularTransaction_Weekly_YesterdayInitDate()
+        {
+            var transaction = new RegularTransaction()
+            {
+                Amount = 13,
+                InitDate = new DateOnly(2022, 12, 07),
+                Frequency = Backend.eFrequency.Weekly,
+            };
+            var nextDuty = transaction.GetNextDuty(new DateOnly(2022, 12, 08));
+            Assert.AreEqual(new DateOnly(2022, 12, 14), nextDuty);
+        }
+
+        [TestMethod]
         public void TestOfRegularTransaction_Weekly_InitDateInFuture()
         {
             var transaction = new RegularTransaction()
@@ -76,7 +89,7 @@ namespace BudgetBook.Test.Entities
                 Frequency = Backend.eFrequency.Weekly,
             };
             var nextDuty = transaction.GetNextDuty(new DateOnly(1566, 06, 12));
-            Assert.AreEqual(new DateOnly(1566, 06, 20), nextDuty);
+            Assert.AreEqual(new DateOnly(1566, 06, 13), nextDuty);
         }
         #endregion Weekly
 
@@ -146,6 +159,99 @@ namespace BudgetBook.Test.Entities
             Assert.AreEqual(new DateOnly(1566, 06, 13), nextDuty);
         }
         #endregion Daily
+
+        #region EverySecondWeek
+        [TestMethod]
+        public void TestOfRegularTransaction_EverySecondWeek()
+        {
+            var transaction = new RegularTransaction()
+            {
+                Amount = 13,
+                InitDate = new DateOnly(2022, 12, 07),
+                Frequency = Backend.eFrequency.EverySecondWeek,
+            };
+            var nextDuty = transaction.GetNextDuty(new DateOnly(2022, 12, 20));
+            Assert.AreEqual(new DateOnly(2022, 12, 21), nextDuty);
+        }
+
+        [TestMethod]
+        public void TestOfRegularTransaction_EverySecondWeek_YesterdayInitDate()
+        {
+            var transaction = new RegularTransaction()
+            {
+                Amount = 13,
+                InitDate = new DateOnly(2022, 12, 07),
+                Frequency = Backend.eFrequency.EverySecondWeek,
+            };
+            var nextDuty = transaction.GetNextDuty(new DateOnly(2022, 12, 08));
+            Assert.AreEqual(new DateOnly(2022, 12, 21), nextDuty);
+        }
+
+        [TestMethod]
+        public void TestOfRegularTransaction_EverySecondWeek_InitDateInFuture()
+        {
+            var transaction = new RegularTransaction()
+            {
+                Amount = 13,
+                InitDate = new DateOnly(2099, 05, 06),
+                Frequency = Backend.eFrequency.EverySecondWeek,
+            };
+            var nextDuty = transaction.GetNextDuty(new DateOnly(2022, 12, 21));
+            Assert.AreEqual(new DateOnly(2099, 05, 06), nextDuty);
+        }
+
+        [TestMethod]
+        public void TestOfRegularTransaction_EverySecondWeek_Today()
+        {
+            var transaction = new RegularTransaction()
+            {
+                Amount = 13,
+                InitDate = new DateOnly(2022, 12, 07),
+                Frequency = Backend.eFrequency.EverySecondWeek,
+            };
+            var nextDuty = transaction.GetNextDuty(new DateOnly(2022, 12, 21));
+            Assert.AreEqual(new DateOnly(2022, 12, 21), nextDuty);
+        }
+
+        [TestMethod]
+        public void TestOfRegularTransaction_EverySecondWeek_Factor3()
+        {
+            var transaction = new RegularTransaction()
+            {
+                Amount = 13,
+                InitDate = new DateOnly(2022, 12, 13),
+                Frequency = Backend.eFrequency.EverySecondWeek,
+            };
+            var nextDuty = transaction.GetNextDuty(3, new DateOnly(2022, 12, 21));
+            Assert.AreEqual(new DateOnly(2023, 01, 24), nextDuty);
+        }
+
+        [TestMethod]
+        public void TestOfRegularTransaction_EverySecondWeek_LongTimeAgo()
+        {
+            var transaction = new RegularTransaction()
+            {
+                Amount = 13,
+                InitDate = new DateOnly(1376, 01, 01),
+                Frequency = Backend.eFrequency.EverySecondWeek,
+            };
+            var nextDuty = transaction.GetNextDuty(new DateOnly(1566, 06, 12));
+            Assert.AreEqual(new DateOnly(1566, 06, 20), nextDuty);
+        }
+
+        [TestMethod]
+        public void TestOfRegularTransaction_EverySecondWeek_ABitTimeAgo()
+        {
+            var transaction = new RegularTransaction()
+            {
+                Amount = 13,
+                InitDate = new DateOnly(2022, 11, 29),
+                Frequency = Backend.eFrequency.EverySecondWeek,
+            };
+            var nextDuty = transaction.GetNextDuty(new DateOnly(2022, 12, 14));
+            Assert.AreEqual(new DateOnly(2022, 12, 27), nextDuty);
+        }
+        #endregion EverySecondWeek
 
         #endregion GetNextDuty
 
