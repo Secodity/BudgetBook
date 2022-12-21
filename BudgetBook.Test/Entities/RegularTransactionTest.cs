@@ -12,7 +12,7 @@ namespace BudgetBook.Test.Entities
     {
 
         [TestMethod]
-        public void TestOfRegularTransaction_Month()
+        public void TestOfRegularTransaction_Weekly()
         {
             var transaction = new RegularTransaction()
             {
@@ -21,11 +21,11 @@ namespace BudgetBook.Test.Entities
                 Frequency = Backend.eFrequency.Weekly,
             };
             var nextDuty = transaction.GetNextDuty(DateOnly.FromDateTime(DateTime.Now));
-            Assert.AreEqual(new DateOnly(2022, 12, 21), nextDuty);
+            Assert.AreEqual(new DateOnly(2022, 12, 14), nextDuty);
         }
 
         [TestMethod]
-        public void TestOfRegularTransaction_Month_InFuture()
+        public void TestOfRegularTransaction_Weekly_InFuture()
         {
             var transaction = new RegularTransaction()
             {
@@ -34,11 +34,11 @@ namespace BudgetBook.Test.Entities
                 Frequency = Backend.eFrequency.Weekly,
             };
             var nextDuty = transaction.GetNextDuty(DateOnly.FromDateTime(DateTime.Now));
-            Assert.AreEqual(DateOnly.FromDateTime(DateTime.Now), nextDuty);
+            Assert.AreEqual(new DateOnly(2099, 05, 06), nextDuty);
         }
 
         [TestMethod]
-        public void TestOfRegularTransaction_Month_Today()
+        public void TestOfRegularTransaction_Weekly_Today()
         {
             var transaction = new RegularTransaction()
             {
@@ -51,7 +51,7 @@ namespace BudgetBook.Test.Entities
         }
 
         [TestMethod]
-        public void TestOfRegularTransaction_Month_Factor3()
+        public void TestOfRegularTransaction_Weekly_Factor3()
         {
             var transaction = new RegularTransaction()
             {
