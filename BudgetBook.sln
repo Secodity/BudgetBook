@@ -7,7 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetBook.Backend", "Budge
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugdetBook.Avalonia", "BugdetBook.Avalonia\BugdetBook.Avalonia.csproj", "{10A5880D-694C-42A7-93FA-C7B460BE53CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetBook.Test", "BudgetBook.Test\BudgetBook.Test.csproj", "{2D44DA66-F8C9-410B-BB07-C69C6FDC6FCE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetBook.Test", "BudgetBook.Test\BudgetBook.Test.csproj", "{2D44DA66-F8C9-410B-BB07-C69C6FDC6FCE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{48349817-53FD-4582-993A-C0180862A81D}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
