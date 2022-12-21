@@ -25,7 +25,7 @@ namespace BudgetBook.Test.Entities
         }
 
         [TestMethod]
-        public void TestOfRegularTransaction_Weekly_InFuture()
+        public void TestOfRegularTransaction_Weekly_InitDateInFuture()
         {
             var transaction = new RegularTransaction()
             {
@@ -61,6 +61,19 @@ namespace BudgetBook.Test.Entities
             };
             var nextDuty = transaction.GetNextDuty(3, new DateOnly(2022, 12, 21));
             Assert.AreEqual(new DateOnly(2023, 01, 03), nextDuty);
+        }
+
+        [TestMethod]
+        public void TestOfRegularTransaction_Weekly_LongTimeAgo()
+        {
+            var transaction = new RegularTransaction()
+            {
+                Amount = 13,
+                InitDate = new DateOnly(1376, 01, 01),
+                Frequency = Backend.eFrequency.Weekly,
+            };
+            var nextDuty = transaction.GetNextDuty(new DateOnly(1566, 06, 12));
+            Assert.AreEqual(new DateOnly(1566, 06, 20), nextDuty);
         }
 
     }

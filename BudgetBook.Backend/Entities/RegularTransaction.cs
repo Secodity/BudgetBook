@@ -22,34 +22,34 @@ public class RegularTransaction : Transaction
 
     public DateOnly GetNextDuty(int factor, DateOnly currentDate)
     {
-        var today = DateOnly.FromDateTime(DateTime.Now);
+        var dateFrom = currentDate;
         var nextDuty = DateOnly.FromDateTime(DateTime.Now);
 
-        if (InitDate >= today)
+        if (InitDate >= dateFrom)
             return InitDate;
 
         switch (Frequency)
         {
             case eFrequency.Daily:
-                nextDuty = today.AddDays(1 * factor);
+                nextDuty = dateFrom.AddDays(1 * factor);
                 break;
             case eFrequency.Weekly:
-                nextDuty = __GetNextWeeklyDuty(today, factor);
+                nextDuty = __GetNextWeeklyDuty(dateFrom, factor);
                 break;
             case eFrequency.EverySecondWeek:
-                nextDuty = today.AddDays(14);
+                nextDuty = dateFrom.AddDays(14);
                 break;
             case eFrequency.Monthly:
-                nextDuty = today.AddMonths(1);
+                nextDuty = dateFrom.AddMonths(1);
                 break;
             case eFrequency.Quaterly:
-                nextDuty = today.AddMonths(3);
+                nextDuty = dateFrom.AddMonths(3);
                 break;
             case eFrequency.HalfYearly:
-                nextDuty = today.AddMonths(6);
+                nextDuty = dateFrom.AddMonths(6);
                 break;
             case eFrequency.Yearly:
-                nextDuty = today.AddYears(1);
+                nextDuty = dateFrom.AddYears(1);
                 break;
         }
         return nextDuty;
