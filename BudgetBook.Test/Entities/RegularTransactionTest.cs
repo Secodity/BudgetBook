@@ -253,6 +253,139 @@ namespace BudgetBook.Test.Entities
         }
         #endregion EverySecondWeek
 
+        #region Monthly
+        [TestMethod]
+        public void TestOfRegularTransaction_Monthly()
+        {
+            var transaction = new RegularTransaction()
+            {
+                Amount = 13,
+                InitDate = new DateOnly(2022, 12, 07),
+                Frequency = Backend.eFrequency.Monthly,
+            };
+            var nextDuty = transaction.GetNextDuty(new DateOnly(2022, 12, 20));
+            Assert.AreEqual(new DateOnly(2023, 01, 07), nextDuty);
+        }
+
+        [TestMethod]
+        public void TestOfRegularTransaction_Monthly_YesterdayInitDate()
+        {
+            var transaction = new RegularTransaction()
+            {
+                Amount = 13,
+                InitDate = new DateOnly(2022, 12, 07),
+                Frequency = Backend.eFrequency.Monthly,
+            };
+            var nextDuty = transaction.GetNextDuty(new DateOnly(2022, 12, 08));
+            Assert.AreEqual(new DateOnly(2023, 01, 07), nextDuty);
+        }
+
+        [TestMethod]
+        public void TestOfRegularTransaction_Monthly_InitDateInFuture()
+        {
+            var transaction = new RegularTransaction()
+            {
+                Amount = 13,
+                InitDate = new DateOnly(2099, 05, 06),
+                Frequency = Backend.eFrequency.Monthly,
+            };
+            var nextDuty = transaction.GetNextDuty(new DateOnly(2022, 12, 21));
+            Assert.AreEqual(new DateOnly(2099, 05, 06), nextDuty);
+        }
+
+        [TestMethod]
+        public void TestOfRegularTransaction_Monthly_Today()
+        {
+            var transaction = new RegularTransaction()
+            {
+                Amount = 13,
+                InitDate = new DateOnly(2022, 12, 07),
+                Frequency = Backend.eFrequency.Monthly,
+            };
+            var nextDuty = transaction.GetNextDuty(new DateOnly(2023, 01, 07));
+            Assert.AreEqual(new DateOnly(2023, 01, 07), nextDuty);
+        }
+
+        [TestMethod]
+        public void TestOfRegularTransaction_Monthly_Factor3()
+        {
+            var transaction = new RegularTransaction()
+            {
+                Amount = 13,
+                InitDate = new DateOnly(2022, 12, 13),
+                Frequency = Backend.eFrequency.Monthly,
+            };
+            var nextDuty = transaction.GetNextDuty(3, new DateOnly(2022, 12, 21));
+            Assert.AreEqual(new DateOnly(2023, 03, 13), nextDuty);
+        }
+
+        [TestMethod]
+        public void TestOfRegularTransaction_Monthly_LongTimeAgo()
+        {
+            var transaction = new RegularTransaction()
+            {
+                Amount = 13,
+                InitDate = new DateOnly(1376, 01, 01),
+                Frequency = Backend.eFrequency.Monthly,
+            };
+            var nextDuty = transaction.GetNextDuty(new DateOnly(1566, 06, 12));
+            Assert.AreEqual(new DateOnly(1566, 07, 01), nextDuty);
+        }
+
+        [TestMethod]
+        public void TestOfRegularTransaction_Monthly_ABitTimeAgo()
+        {
+            var transaction = new RegularTransaction()
+            {
+                Amount = 13,
+                InitDate = new DateOnly(2022, 11, 29),
+                Frequency = Backend.eFrequency.Monthly,
+            };
+            var nextDuty = transaction.GetNextDuty(new DateOnly(2022, 12, 14));
+            Assert.AreEqual(new DateOnly(2022, 12, 29), nextDuty);
+        }
+
+        [TestMethod]
+        public void TestOfRegularTransaction_Monthly_MoreDaysThanNextMonth()
+        {
+            var transaction = new RegularTransaction()
+            {
+                Amount = 13,
+                InitDate = new DateOnly(2022, 01, 31),
+                Frequency = Backend.eFrequency.Monthly,
+            };
+            var nextDuty = transaction.GetNextDuty(new DateOnly(2022, 02, 14));
+            Assert.AreEqual(new DateOnly(2022, 02, 28), nextDuty);
+        }
+
+        [TestMethod]
+        public void TestOfRegularTransaction_Monthly_MoreDaysThanNextMonth_LeapYear()
+        {
+            var transaction = new RegularTransaction()
+            {
+                Amount = 13,
+                InitDate = new DateOnly(2023, 01, 31),
+                Frequency = Backend.eFrequency.Monthly,
+            };
+            var nextDuty = transaction.GetNextDuty(new DateOnly(2024, 02, 14));
+            Assert.AreEqual(new DateOnly(2024, 02, 29), nextDuty);
+        }
+
+        [TestMethod]
+        public void TestOfRegularTransaction_Monthly_MoreDaysThanNextMonth_InitOnLeapYearDay()
+        {
+            var transaction = new RegularTransaction()
+            {
+                Amount = 13,
+                InitDate = new DateOnly(2024, 02, 28),
+                Frequency = Backend.eFrequency.Monthly,
+            };
+            var nextDuty = transaction.GetNextDuty(12, new DateOnly(2024, 03, 01));
+            Assert.AreEqual(new DateOnly(2025, 02, 28), nextDuty);
+        }
+
+        #endregion Monthly
+
         #endregion GetNextDuty
 
     }

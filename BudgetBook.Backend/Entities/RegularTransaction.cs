@@ -40,7 +40,7 @@ public class RegularTransaction : Transaction
                 nextDuty = __GetNextWeeklyDuty(dateFrom, factor, 14);
                 break;
             case eFrequency.Monthly:
-                nextDuty = dateFrom.AddMonths(1);
+                nextDuty = __GetNextMonthlyDuty(dateFrom, factor);
                 break;
             case eFrequency.Quaterly:
                 nextDuty = dateFrom.AddMonths(3);
@@ -54,6 +54,7 @@ public class RegularTransaction : Transaction
         }
         return nextDuty;
     }
+
     private DateOnly __GetNextWeeklyDuty(DateOnly dateFrom, int factor)
         => __GetNextWeeklyDuty(dateFrom, factor, 7);
     private DateOnly __GetNextWeeklyDuty(DateOnly dateFrom, int factor, int alternativeWeekSize)
@@ -74,8 +75,8 @@ public class RegularTransaction : Transaction
         else
         {
             var nextDuty = dateFrom.AddDays(alternativeWeekSize - rest);
-            
-            if(factor > 1)
+
+            if (factor > 1)
             {
                 weeks = (nextDuty.DayNumber - InitDate.DayNumber) / alternativeWeekSize;
                 weekRest = weeks % factor;
@@ -87,4 +88,42 @@ public class RegularTransaction : Transaction
             return nextDuty.AddDays(alternativeWeekSize * (factor - weekRest));
         }
     }
+
+    private DateOnly __GetNextMonthlyDuty(DateOnly dateFrom, int factor)
+    {
+        var initDay = InitDate.Day;
+        var fromDay = dateFrom.Day;
+        if (initDay == fromDay)
+            return dateFrom;
+        dateFrom = __IncrementMonth(dateFrom, fromDay < initDay ? factor - 1 : factor);
+        var maxDaysForDateFrom = DateTime.DaysInMonth(dateFrom.Year, dateFrom.Month);
+        if (fromDay < initDay)
+        {
+            if (initDay <= maxDaysForDateFrom)
+                return new DateOnly(dateFrom.Year, dateFrom.Month, initDay);
+            else
+                return new DateOnly(dateFrom.Year, dateFrom.Month, maxDaysForDateFrom);
+        }
+        else
+        {
+            if (initDay <= maxDaysForDateFrom)
+                return new DateOnly(dateFrom.Year, dateFrom.Month, initDay);
+            else
+                return new DateOnly(dateFrom.Year, dateFrom.Month, maxDaysForDateFrom);
+        }
+    }
+
+    private DateOnly __IncrementMonth(DateOnly dateFrom, int factor)
+    {
+        var newMonth = dateFrom.Month + factor;
+        var newYear = dateFrom.Year;
+        while (newMonth > 12)
+        {
+            newYear++;
+            newMonth -= 12;
+        }
+        var maxDay = DateTime.DaysInMonth(newYear, newMonth);
+        return new DateOnly(newYear, newMonth, dateFrom.Day >= maxDay ? maxDay : dateFrom.Day);
+    }
+
 }
