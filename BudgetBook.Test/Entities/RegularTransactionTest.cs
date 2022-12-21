@@ -20,8 +20,8 @@ namespace BudgetBook.Test.Entities
                 InitDate = new DateOnly(2022, 12, 07),
                 Frequency = Backend.eFrequency.Weekly,
             };
-            var nextDuty = transaction.GetNextDuty(DateOnly.FromDateTime(DateTime.Now));
-            Assert.AreEqual(new DateOnly(2022, 12, 14), nextDuty);
+            var nextDuty = transaction.GetNextDuty(new DateOnly(2022, 12, 21));
+            Assert.AreEqual(new DateOnly(2022, 12, 21), nextDuty);
         }
 
         [TestMethod]
@@ -33,7 +33,7 @@ namespace BudgetBook.Test.Entities
                 InitDate = new DateOnly(2099, 05, 06),
                 Frequency = Backend.eFrequency.Weekly,
             };
-            var nextDuty = transaction.GetNextDuty(DateOnly.FromDateTime(DateTime.Now));
+            var nextDuty = transaction.GetNextDuty(new DateOnly(2022, 12, 21));
             Assert.AreEqual(new DateOnly(2099, 05, 06), nextDuty);
         }
 
@@ -43,11 +43,11 @@ namespace BudgetBook.Test.Entities
             var transaction = new RegularTransaction()
             {
                 Amount = 13,
-                InitDate = DateOnly.FromDateTime(DateTime.Now),
+                InitDate = new DateOnly(2022, 12, 21),
                 Frequency = Backend.eFrequency.Weekly,
             };
-            var nextDuty = transaction.GetNextDuty(DateOnly.FromDateTime(DateTime.Now));
-            Assert.AreEqual(DateOnly.FromDateTime(DateTime.Now), nextDuty);
+            var nextDuty = transaction.GetNextDuty(new DateOnly(2022, 12, 21));
+            Assert.AreEqual(new DateOnly(2022, 12, 21), nextDuty);
         }
 
         [TestMethod]
@@ -59,7 +59,7 @@ namespace BudgetBook.Test.Entities
                 InitDate = new DateOnly(2022, 12, 13),
                 Frequency = Backend.eFrequency.Weekly,
             };
-            var nextDuty = transaction.GetNextDuty(3, DateOnly.FromDateTime(DateTime.Now));
+            var nextDuty = transaction.GetNextDuty(3, new DateOnly(2022, 12, 21));
             Assert.AreEqual(new DateOnly(2023, 01, 03), nextDuty);
         }
 
