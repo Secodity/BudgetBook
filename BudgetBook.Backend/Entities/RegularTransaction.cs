@@ -14,15 +14,14 @@ public class RegularTransaction : Transaction
     public DateOnly GetNextDuty()
         => GetNextDuty(1, DateOnly.FromDateTime(DateTime.Now));
 
-    public DateOnly GetNextDuty(DateOnly currentDate)
-        => GetNextDuty(1, currentDate);
+    public DateOnly GetNextDuty(DateOnly dateFrom)
+        => GetNextDuty(1, dateFrom);
 
     public DateOnly GetNextDuty(int factor)
       => GetNextDuty(factor, DateOnly.FromDateTime(DateTime.Now));
 
-    public DateOnly GetNextDuty(int factor, DateOnly currentDate)
+    public DateOnly GetNextDuty(int factor, DateOnly dateFrom)
     {
-        var dateFrom = currentDate;
         var nextDuty = DateOnly.FromDateTime(DateTime.Now);
 
         if (InitDate >= dateFrom)
@@ -55,9 +54,9 @@ public class RegularTransaction : Transaction
         return nextDuty;
     }
 
-    private DateOnly __GetNextWeeklyDuty(DateOnly today, int factor)
+    private DateOnly __GetNextWeeklyDuty(DateOnly dateFrom, int factor)
     {
-        var dayDiff = today.DayNumber - InitDate.DayNumber;
+        var dayDiff = dateFrom.DayNumber - InitDate.DayNumber;
 
         var rest = dayDiff % 7;
         var weeks = dayDiff / 7;
@@ -66,13 +65,13 @@ public class RegularTransaction : Transaction
         if (rest == 0)
         {
             if (weekRest == 0)
-                return today;
+                return dateFrom;
             else
-                return today.AddDays(7 * (factor - weekRest));
+                return dateFrom.AddDays(7 * (factor - weekRest));
         }
         else
         {
-            var nextDuty = today.AddDays(7 - rest);
+            var nextDuty = dateFrom.AddDays(7 - rest);
             weeks = (nextDuty.DayNumber - InitDate.DayNumber) / 7;
             weekRest = weeks % factor;
             return nextDuty.AddDays(7 * (factor - weekRest));
