@@ -14,68 +14,68 @@ public class RegularTransaction : Transaction
     public DateOnly GetNextDuty()
         => GetNextDuty(1, DateOnly.FromDateTime(DateTime.Now));
 
-    public DateOnly GetNextDuty(DateOnly CurrentDate)
-        => GetNextDuty(1, CurrentDate);
+    public DateOnly GetNextDuty(DateOnly currentDate)
+        => GetNextDuty(1, currentDate);
 
-    public DateOnly GetNextDuty(int Factor)
-      => GetNextDuty(Factor, DateOnly.FromDateTime(DateTime.Now));
+    public DateOnly GetNextDuty(int factor)
+      => GetNextDuty(factor, DateOnly.FromDateTime(DateTime.Now));
 
-    public DateOnly GetNextDuty(int Factor, DateOnly CurrentDate)
+    public DateOnly GetNextDuty(int factor, DateOnly currentDate)
     {
         var today = DateOnly.FromDateTime(DateTime.Now);
-        var NextDuty = DateOnly.FromDateTime(DateTime.Now);
+        var nextDuty = DateOnly.FromDateTime(DateTime.Now);
 
         if (InitDate >= today)
-            return today;
+            return InitDate;
 
         switch (Frequency)
         {
             case eFrequency.Daily:
-                NextDuty = today.AddDays(1 * Factor);
+                nextDuty = today.AddDays(1 * factor);
                 break;
             case eFrequency.Weekly:
-                NextDuty = __GetNextWeeklyDuty(today, Factor);
+                nextDuty = __GetNextWeeklyDuty(today, factor);
                 break;
             case eFrequency.EverySecondWeek:
-                NextDuty = today.AddDays(14);
+                nextDuty = today.AddDays(14);
                 break;
             case eFrequency.Monthly:
-                NextDuty = today.AddMonths(1);
+                nextDuty = today.AddMonths(1);
                 break;
             case eFrequency.Quaterly:
-                NextDuty = today.AddMonths(3);
+                nextDuty = today.AddMonths(3);
                 break;
             case eFrequency.HalfYearly:
-                NextDuty = today.AddMonths(6);
+                nextDuty = today.AddMonths(6);
                 break;
             case eFrequency.Yearly:
-                NextDuty = today.AddYears(1);
+                nextDuty = today.AddYears(1);
                 break;
         }
-        return NextDuty;
+        return nextDuty;
     }
 
     private DateOnly __GetNextWeeklyDuty(DateOnly today, int factor)
     {
-        var DayDiff = today.DayNumber - InitDate.DayNumber;
+        var dayDiff = today.DayNumber - InitDate.DayNumber;
 
-        var Rest = DayDiff % 7;
-        var Weeks = DayDiff / 7;
-        var WeekRest = Weeks % factor;
+        var rest = dayDiff % 7;
+        var weeks = dayDiff / 7;
+        var weekRest = weeks % factor;
 
-        if (Rest == 0)
+        if (rest == 0)
         {
-            if (WeekRest == 0)
+            if (weekRest == 0)
                 return today;
             else
-                return today.AddDays(7 * (factor - WeekRest));
+                return today.AddDays(7 * (factor - weekRest));
         }
         else
         {
-            var NextDuty = today.AddDays(7 - Rest);
-            Weeks = (NextDuty.DayNumber - InitDate.DayNumber) / 7;
-            WeekRest = Weeks % factor;
-            return NextDuty.AddDays(7 * (factor - WeekRest));
+            var nextDuty = today.AddDays(7 - rest);
+            weeks = (nextDuty.DayNumber - InitDate.DayNumber) / 7;
+            weekRest = weeks % factor;
+            return nextDuty.AddDays(7 * (factor - weekRest));
         }
     }
 }
