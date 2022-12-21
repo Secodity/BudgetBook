@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ public class Transaction
 
     public override string ToString()
     {
-        return $"From: '{OutgoingId}' - To: '{TargetId}' - Amount: '{Amount.ToString("0.00")}'{(Description.Equals(string.Empty) ? "" : $" - Description: {Description}")}";
+        return $"From: '{OutgoingId}' - To: '{TargetId}' - Amount: '{Amount.ToString("0.00", CultureInfo.InvariantCulture)}'{(Description.Equals(string.Empty) ? "" : $" - Description: {Description}")}";
     }
     public override int GetHashCode()
     {
