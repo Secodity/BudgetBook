@@ -11,6 +11,8 @@ namespace BudgetBook.Test.Entities
     public class RegularTransactionTest
     {
 
+        #region GetNextDuty
+
         #region Weekly
         [TestMethod]
         public void TestOfRegularTransaction_Weekly()
@@ -76,7 +78,6 @@ namespace BudgetBook.Test.Entities
             var nextDuty = transaction.GetNextDuty(new DateOnly(1566, 06, 12));
             Assert.AreEqual(new DateOnly(1566, 06, 20), nextDuty);
         }
-
         #endregion Weekly
 
         #region Daily
@@ -144,8 +145,9 @@ namespace BudgetBook.Test.Entities
             var nextDuty = transaction.GetNextDuty(new DateOnly(1566, 06, 12));
             Assert.AreEqual(new DateOnly(1566, 06, 13), nextDuty);
         }
-
         #endregion Daily
+
+        #endregion GetNextDuty
 
     }
 }
