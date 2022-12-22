@@ -130,7 +130,7 @@ namespace BudgetBook.Test.Entities
                 Frequency = Backend.eFrequency.Daily,
             };
             var nextDuty = transaction.GetNextDuty(new DateOnly(2022, 12, 28));
-            Assert.AreEqual(new DateOnly(2022, 12, 29), nextDuty);
+            Assert.AreEqual(new DateOnly(2022, 12, 28), nextDuty);
         }
 
         [TestMethod]
@@ -143,7 +143,7 @@ namespace BudgetBook.Test.Entities
                 Frequency = Backend.eFrequency.Daily,
             };
             var nextDuty = transaction.GetNextDuty(3, new DateOnly(2022, 12, 21));
-            Assert.AreEqual(new DateOnly(2022, 12, 24), nextDuty);
+            Assert.AreEqual(new DateOnly(2022, 12, 22), nextDuty);
         }
 
         [TestMethod]
@@ -156,7 +156,7 @@ namespace BudgetBook.Test.Entities
                 Frequency = Backend.eFrequency.Daily,
             };
             var nextDuty = transaction.GetNextDuty(new DateOnly(1566, 06, 12));
-            Assert.AreEqual(new DateOnly(1566, 06, 13), nextDuty);
+            Assert.AreEqual(new DateOnly(1566, 06, 12), nextDuty);
         }
         #endregion Daily
 
@@ -380,7 +380,33 @@ namespace BudgetBook.Test.Entities
                 InitDate = new DateOnly(2024, 02, 28),
                 Frequency = Backend.eFrequency.Monthly,
             };
+            var nextDuty = transaction.GetNextDuty(new DateOnly(2024, 03, 01));
+            Assert.AreEqual(new DateOnly(2025, 03, 28), nextDuty);
+        }
+
+        [TestMethod]
+        public void TestOfRegularTransaction_Monthly_MoreDaysThanNextMonth_InitOnLeapYearDay_OnLeapDay_Factor3()
+        {
+            var transaction = new RegularTransaction()
+            {
+                Amount = 13,
+                InitDate = new DateOnly(2024, 02, 29),
+                Frequency = Backend.eFrequency.Monthly,
+            };
             var nextDuty = transaction.GetNextDuty(12, new DateOnly(2024, 03, 01));
+            Assert.AreEqual(new DateOnly(2025, 02, 28), nextDuty);
+        }
+
+        [TestMethod]
+        public void TestOfRegularTransaction_Monthly_MoreDaysThanNextMonth_InitOnLeapYearDay_OnLeapDay_ThisMonth()
+        {
+            var transaction = new RegularTransaction()
+            {
+                Amount = 13,
+                InitDate = new DateOnly(2024, 02, 29),
+                Frequency = Backend.eFrequency.Monthly,
+            };
+            var nextDuty = transaction.GetNextDuty(12, new DateOnly(2025, 02, 01));
             Assert.AreEqual(new DateOnly(2025, 02, 28), nextDuty);
         }
 
@@ -462,7 +488,7 @@ namespace BudgetBook.Test.Entities
                 Frequency = Backend.eFrequency.Quaterly,
             };
             var nextDuty = transaction.GetNextDuty(new DateOnly(1566, 06, 12));
-            Assert.AreEqual(new DateOnly(1566, 09, 01), nextDuty);
+            Assert.AreEqual(new DateOnly(1566, 10, 01), nextDuty);
         }
 
         [TestMethod]
