@@ -49,7 +49,7 @@ public class RegularTransaction : Transaction
                 nextDuty = __GetNextMonthlyDuty(dateFrom, factor * 6);
                 break;
             case eFrequency.Yearly:
-                nextDuty = dateFrom.AddYears(1);
+                nextDuty = __GetNextMonthlyDuty(dateFrom, factor * 12);
                 break;
         }
         return nextDuty;
@@ -97,20 +97,10 @@ public class RegularTransaction : Transaction
             return dateFrom;
         dateFrom = __IncrementMonth(dateFrom, fromDay < initDay ? factor - 1 : factor);
         var maxDaysForDateFrom = DateTime.DaysInMonth(dateFrom.Year, dateFrom.Month);
-        if (fromDay < initDay)
-        {
-            if (initDay <= maxDaysForDateFrom)
-                return new DateOnly(dateFrom.Year, dateFrom.Month, initDay);
-            else
-                return new DateOnly(dateFrom.Year, dateFrom.Month, maxDaysForDateFrom);
-        }
+        if (initDay <= maxDaysForDateFrom)
+            return new DateOnly(dateFrom.Year, Frequency == eFrequency.Yearly ? InitDate.Month : dateFrom.Month, initDay);
         else
-        {
-            if (initDay <= maxDaysForDateFrom)
-                return new DateOnly(dateFrom.Year, dateFrom.Month, initDay);
-            else
-                return new DateOnly(dateFrom.Year, dateFrom.Month, maxDaysForDateFrom);
-        }
+            return new DateOnly(dateFrom.Year, Frequency == eFrequency.Yearly ? InitDate.Month : dateFrom.Month, maxDaysForDateFrom);
     }
 
     private DateOnly __IncrementMonth(DateOnly dateFrom, int factor)
