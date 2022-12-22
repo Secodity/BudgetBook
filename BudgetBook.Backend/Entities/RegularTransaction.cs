@@ -46,7 +46,7 @@ public class RegularTransaction : Transaction
                 nextDuty = __GetNextMonthlyDuty(dateFrom, factor * 3);
                 break;
             case eFrequency.HalfYearly:
-                nextDuty = dateFrom.AddMonths(6);
+                nextDuty = __GetNextMonthlyDuty(dateFrom, factor * 6);
                 break;
             case eFrequency.Yearly:
                 nextDuty = dateFrom.AddYears(1);
