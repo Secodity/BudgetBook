@@ -32,7 +32,6 @@ public class RegularTransaction : Transaction
         {
             case eFrequency.Daily:
                 nextDuty = __GetNextDailyDuty(dateFrom, factor);
-                //nextDuty = dateFrom.AddDays(1 * (factor - 1));
                 break;
             case eFrequency.Weekly:
                 nextDuty = __GetNextWeeklyDuty(dateFrom, factor);
@@ -110,7 +109,12 @@ public class RegularTransaction : Transaction
 
         if (monthRest < 0)
             throw new Exception("Month rest cannot be less than zero, please check");
-        else if (monthRest != 0 /*|| factor == 1*/)
+        else if (monthRest == 0)
+        {
+            if (initDay < fromDay)
+                dateFrom = __IncrementMonth(dateFrom, factor);
+        }
+        else if (monthRest != 0)
             dateFrom = __IncrementMonth(dateFrom, monthsBetween == 0 ? monthRest : factor - monthRest);
 
         var maxDaysForDateFrom = DateTime.DaysInMonth(dateFrom.Year, dateFrom.Month);
@@ -138,17 +142,13 @@ public class RegularTransaction : Transaction
         if (dateOne == dateTwo)
             return 0;
 
-        int months = 0;
-
-        //dateOne = new DateOnly(2023, 5, 17);
-        //dateTwo = new DateOnly(2022, 11, 15);
+        int months;
         if (dateOne > dateTwo)
         {
             if (dateOne.Year != dateTwo.Year)
                 months = (12 - dateTwo.Month) + dateOne.Month;
             else
                 return dateOne.Month - dateTwo.Month;
-
 
             months += (dateOne.Year - (dateTwo.Year + 1)) * 12;
         }

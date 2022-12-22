@@ -621,7 +621,7 @@ namespace BudgetBook.Test.Entities
                 Frequency = Backend.eFrequency.HalfYearly,
             };
             var nextDuty = transaction.GetNextDuty(new DateOnly(1566, 06, 12));
-            Assert.AreEqual(new DateOnly(1566, 12, 01), nextDuty);
+            Assert.AreEqual(new DateOnly(1566, 07, 01), nextDuty);
         }
 
         [TestMethod]
