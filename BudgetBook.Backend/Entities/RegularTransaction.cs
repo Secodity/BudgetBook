@@ -31,7 +31,8 @@ public class RegularTransaction : Transaction
         switch (Frequency)
         {
             case eFrequency.Daily:
-                nextDuty = dateFrom.AddDays(1 * factor);
+                nextDuty = __GetNextDailyDuty(dateFrom, factor);
+                //nextDuty = dateFrom.AddDays(1 * (factor - 1));
                 break;
             case eFrequency.Weekly:
                 nextDuty = __GetNextWeeklyDuty(dateFrom, factor);
@@ -53,6 +54,13 @@ public class RegularTransaction : Transaction
                 break;
         }
         return nextDuty;
+    }
+
+    private DateOnly __GetNextDailyDuty(DateOnly dateFrom, int factor)
+    {
+        var dayDiff = dateFrom.DayNumber - InitDate.DayNumber;
+        var rest = dayDiff % factor;
+        return dateFrom.AddDays(factor > 1 ? factor - rest : 0);
     }
 
     private DateOnly __GetNextWeeklyDuty(DateOnly dateFrom, int factor)
@@ -95,10 +103,19 @@ public class RegularTransaction : Transaction
         var fromDay = dateFrom.Day;
         if (initDay == fromDay)
             return dateFrom;
-        dateFrom = __IncrementMonth(dateFrom, fromDay < initDay ? factor - 1 : factor);
+
+
+        var monthsBetween = __CountMonthsBetween(dateFrom, InitDate);
+        var monthRest = monthsBetween == 0 ? factor : monthsBetween % factor;
+
+        if (monthRest < 0)
+            throw new Exception("Month rest cannot be less than zero, please check");
+        else if (monthRest != 0 /*|| factor == 1*/)
+            dateFrom = __IncrementMonth(dateFrom, monthsBetween == 0 ? monthRest : factor - monthRest);
+
         var maxDaysForDateFrom = DateTime.DaysInMonth(dateFrom.Year, dateFrom.Month);
         if (initDay <= maxDaysForDateFrom)
-            return new DateOnly(dateFrom.Year, Frequency == eFrequency.Yearly ? InitDate.Month : dateFrom.Month, initDay);
+            return new DateOnly(dateFrom.Year, dateFrom.Month, initDay);
         else
             return new DateOnly(dateFrom.Year, Frequency == eFrequency.Yearly ? InitDate.Month : dateFrom.Month, maxDaysForDateFrom);
     }
@@ -114,6 +131,36 @@ public class RegularTransaction : Transaction
         }
         var maxDay = DateTime.DaysInMonth(newYear, newMonth);
         return new DateOnly(newYear, newMonth, dateFrom.Day >= maxDay ? maxDay : dateFrom.Day);
+    }
+
+    private int __CountMonthsBetween(DateOnly dateOne, DateOnly dateTwo)
+    {
+        if (dateOne == dateTwo)
+            return 0;
+
+        int months = 0;
+
+        //dateOne = new DateOnly(2023, 5, 17);
+        //dateTwo = new DateOnly(2022, 11, 15);
+        if (dateOne > dateTwo)
+        {
+            if (dateOne.Year != dateTwo.Year)
+                months = (12 - dateTwo.Month) + dateOne.Month;
+            else
+                return dateOne.Month - dateTwo.Month;
+
+
+            months += (dateOne.Year - (dateTwo.Year + 1)) * 12;
+        }
+        else
+        {
+            if (dateOne.Year != dateTwo.Year)
+                months = (12 - dateOne.Month) + dateTwo.Month;
+            else
+                return dateTwo.Month - dateOne.Month;
+            months += (dateTwo.Year - (dateOne.Year + 1)) * 12;
+        }
+        return months;
     }
 
 }
