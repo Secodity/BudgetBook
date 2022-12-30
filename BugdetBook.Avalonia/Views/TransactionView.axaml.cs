@@ -2,9 +2,9 @@ using Avalonia.Controls;
 
 namespace BugdetBook.Avalonia.Views;
 
-public partial class InvoicesView : UserControl
+public partial class TransactionView : UserControl
 {
-    public InvoicesView()
+    public TransactionView()
     {
         InitializeComponent();
     }

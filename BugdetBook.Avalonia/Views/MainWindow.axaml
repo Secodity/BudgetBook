@@ -7,27 +7,35 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="BugdetBook.Avalonia.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="BugdetBook.Avalonia">
+		 xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:vms="using:ViewModelsSamples.Bars.Basic"
+        Title="BugdetBook">
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
 
-	<TabControl>
+	<StackPanel Orientation="Horizontal" Grid.Row="0">
+		<Label Content ="DarkMode" FontSize ="20"/>
+		<CheckBox IsChecked="{Binding DarkModeChecked, Mode=TwoWay}"/>
+	</StackPanel>
+
+	<TabControl TabStripPlacement="Left" Grid.Row="1">
 		<TabItem Header="Dashboard">
 			<local:DashboardView/>
 		</TabItem>
 		
-		<TabItem Header="Liabilities">
-			<local:LiabilitiesView/>
+		<TabItem Header="Transactions">
+			<local:TransactionView/>
 		</TabItem>
 
-		<TabItem Header="Invoices">
-			<local:InvoicesView/>
+		<TabItem Header="Accounts">
+			<local:AccountView/>
 		</TabItem>
 	</TabControl>
+	</Grid>
 	
 	
 </Window>
