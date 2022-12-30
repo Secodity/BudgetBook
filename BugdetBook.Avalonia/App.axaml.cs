@@ -37,43 +37,28 @@ public partial class App : Application
     public static void RefreshStyles()
     {
         var stylesToAdd = new List<Style>();
-        Style labelStyle = null;
-        Style textBlockStyle = null;
-        Style gridSplitterStyle = null;
-        foreach (var style in Application.Current.Styles)
+        foreach (var style in Current.Styles)
         {
             if (style is FluentTheme theme)
             {
-                if (theme.Mode == FluentThemeMode.Dark)
-                {
-                    labelStyle = new Style(x => x.OfType<Label>());
-                    labelStyle.Setters.Add(new Setter(Label.ForegroundProperty, Brushes.White));
-                    labelStyle.Setters.Add(new Setter(Label.FontSizeProperty, 35.0));
+                var brushToUse = theme.Mode == FluentThemeMode.Dark ? Brushes.White : Brushes.Black;
 
-                    textBlockStyle = new Style(x => x.OfType<TextBlock>());
-                    textBlockStyle.Setters.Add(new Setter(Label.ForegroundProperty, Brushes.White));
+                var labelStyle = new Style(x => x.OfType<Label>());
+                labelStyle.Setters.Add(new Setter(Label.ForegroundProperty, brushToUse));
+                labelStyle.Setters.Add(new Setter(Label.FontSizeProperty, 35.0));
 
-                    gridSplitterStyle = new Style(x => x.OfType<GridSplitter>());
-                    gridSplitterStyle.Setters.Add(new Setter(Label.BackgroundProperty, Brushes.White));
-                }
-                else
-                {
-                    labelStyle = new Style(x => x.OfType<Label>());
-                    labelStyle.Setters.Add(new Setter(Label.ForegroundProperty, Brushes.Black));
-                    labelStyle.Setters.Add(new Setter(Label.FontSizeProperty, 35.0));
+                var textBlockStyle = new Style(x => x.OfType<TextBlock>());
+                textBlockStyle.Setters.Add(new Setter(Label.ForegroundProperty, brushToUse));
 
-                    textBlockStyle = new Style(x => x.OfType<TextBlock>());
-                    textBlockStyle.Setters.Add(new Setter(Label.ForegroundProperty, Brushes.Black));
+                var gridSplitterStyle = new Style(x => x.OfType<GridSplitter>());
+                gridSplitterStyle.Setters.Add(new Setter(Label.BackgroundProperty, brushToUse));
 
-                    gridSplitterStyle = new Style(x => x.OfType<GridSplitter>());
-                    gridSplitterStyle.Setters.Add(new Setter(Label.BackgroundProperty, Brushes.Black));
-                }
                 stylesToAdd.Add(labelStyle);
                 stylesToAdd.Add(textBlockStyle);
                 stylesToAdd.Add(gridSplitterStyle);
             }
         }
 
-        stylesToAdd.ForEach(s => Application.Current.Styles.Add(s));
+        stylesToAdd.ForEach(s => Current.Styles.Add(s));
     }
 }
